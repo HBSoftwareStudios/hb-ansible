@@ -1,4 +1,5 @@
 ---
+# --- Ansible Automations-User ---
 - name: Ansible-User erstellen
   ansible.builtin.user:
     name: "{{ baseline_config_user_name }}"
@@ -24,3 +25,38 @@
     group: root
     mode: "0440"
     validate: "visudo -cf %s"
+
+# --- Admin-Benutzer ---
+- name: Admin-User erstellen
+  ansible.builtin.user:
+    name: "{{ item.name }}"
+    shell: /bin/bash
+    groups: sudo
+    append: true
+    create_home: true
+    state: present
+  loop: "{{ baseline_config_admin_users }}"
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: SSH-Public-Key fuer Admin-User deployen
+  ansible.posix.authorized_key:
+    user: "{{ item.name }}"
+    key: "{{ item.ssh_pubkey }}"
+    state: present
+    exclusive: true
+  loop: "{{ baseline_config_admin_users }}"
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: Passwordless sudo fuer Admin-User einrichten
+  ansible.builtin.copy:
+    dest: "/etc/sudoers.d/{{ item.name }}"
+    content: "{{ item.name }} ALL=(ALL) NOPASSWD:ALL\n"
+    owner: root
+    group: root
+    mode: "0440"
+    validate: "visudo -cf %s"
+  loop: "{{ baseline_config_admin_users }}"
+  loop_control:
+    label: "{{ item.name }}"

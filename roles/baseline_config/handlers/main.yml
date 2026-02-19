@@ -22,3 +22,8 @@
 - name: Reload ufw
   community.general.ufw:
     state: reloaded
+
+- name: Restart systemd-journald
+  ansible.builtin.systemd:
+    name: systemd-journald
+    state: restarted

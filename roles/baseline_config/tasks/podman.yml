@@ -1,0 +1,60 @@
+---
+- name: Podman und Abhaengigkeiten installieren
+  ansible.builtin.apt:
+    name:
+      - podman
+      - podman-compose
+      - slirp4netns
+      - uidmap
+    state: present
+    update_cache: true
+
+- name: Podman Registries konfigurieren
+  ansible.builtin.template:
+    src: podman_registries.conf.j2
+    dest: /etc/containers/registries.conf
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Podman Storage konfigurieren
+  ansible.builtin.template:
+    src: podman_storage.conf.j2
+    dest: /etc/containers/storage.conf
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Subuid-Ranges fuer Admin-User einrichten
+  ansible.builtin.lineinfile:
+    path: /etc/subuid
+    regexp: "^{{ item.name }}:"
+    line: "{{ item.name }}:100000:65536"
+    create: true
+    owner: root
+    group: root
+    mode: "0644"
+  loop: "{{ baseline_config_admin_users }}"
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: Subgid-Ranges fuer Admin-User einrichten
+  ansible.builtin.lineinfile:
+    path: /etc/subgid
+    regexp: "^{{ item.name }}:"
+    line: "{{ item.name }}:100000:65536"
+    create: true
+    owner: root
+    group: root
+    mode: "0644"
+  loop: "{{ baseline_config_admin_users }}"
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: Linger fuer Admin-User aktivieren
+  ansible.builtin.command:
+    cmd: "loginctl enable-linger {{ item.name }}"
+    creates: "/var/lib/systemd/linger/{{ item.name }}"
+  loop: "{{ baseline_config_admin_users }}"
+  loop_control:
+    label: "{{ item.name }}"

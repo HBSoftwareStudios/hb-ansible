@@ -19,3 +19,9 @@
 
 - name: Unattended-Upgrades konfigurieren
   ansible.builtin.import_tasks: unattended_upgrades.yml
+
+- name: Logging konfigurieren
+  ansible.builtin.import_tasks: logging.yml
+
+- name: Podman installieren und konfigurieren
+  ansible.builtin.import_tasks: podman.yml

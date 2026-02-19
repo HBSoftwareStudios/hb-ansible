@@ -1,0 +1,4 @@
+# {{ ansible_managed }}
+# Podman Registries — verwaltet durch Ansible
+
+unqualified-search-registries = [{{ baseline_config_podman_registries | map('regex_replace', '^(.*)$', '"\1"') | join(', ') }}]

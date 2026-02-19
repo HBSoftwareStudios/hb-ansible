@@ -1,0 +1,8 @@
+# {{ ansible_managed }}
+# Podman Storage — verwaltet durch Ansible
+
+[storage]
+driver = "overlay"
+
+[storage.options.overlay]
+mountopt = "nodev"

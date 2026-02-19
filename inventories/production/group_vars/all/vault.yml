@@ -8,3 +8,7 @@ vault_ansible_ssh_pubkey: "PLATZHALTER_SSH_PUBKEY"
 # Gehashtes Passwort des ansible-Users (optional)
 # Erstellen mit: mkpasswd --method=sha-512
 vault_ansible_user_password: "PLATZHALTER_PASSWORT_HASH"
+
+# SSH Public Keys der Admin-User
+vault_alex_ssh_pubkey: "PLATZHALTER_SSH_PUBKEY_ALEX"
+vault_sina_ssh_pubkey: "PLATZHALTER_SSH_PUBKEY_SINA"

@@ -11,6 +11,13 @@ baseline_config_ssh_x11_forwarding: false
 baseline_config_user_name: ansible
 baseline_config_user_shell: /bin/bash
 
+# Admin-Benutzer (SSH-Keys aus Vault)
+baseline_config_admin_users:
+  - name: alex
+    ssh_pubkey: "{{ vault_alex_ssh_pubkey }}"
+  - name: sina
+    ssh_pubkey: "{{ vault_sina_ssh_pubkey }}"
+
 # NTP (PTB-Zeitserver)
 baseline_config_ntp_servers:
   - ptbtime1.ptb.de
@@ -33,5 +40,14 @@ baseline_config_unattended_reboot: false
 baseline_config_unattended_reboot_time: "02:00"
 
 # Sysctl / Kernel-Hardening
-baseline_config_ip_forward: 0  # Auf 1 setzen wenn Docker genutzt wird
+baseline_config_ip_forward: 0  # Auf 1 setzen wenn Podman rootful/Port-Forwarding genutzt wird
 baseline_config_disable_ipv6: 1  # Auf 0 setzen wenn IPv6 benoetigt wird
+
+# Logging (journald)
+baseline_config_journald_max_use: 500M
+baseline_config_journald_max_file_size: 50M
+baseline_config_journald_retention: 30day
+
+# Podman
+baseline_config_podman_registries:
+  - docker.io

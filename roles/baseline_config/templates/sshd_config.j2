@@ -16,7 +16,7 @@ LoginGraceTime 30
 AuthenticationMethods publickey
 
 # Zugriffsbeschraenkung
-AllowUsers {{ baseline_config_user_name }}
+AllowUsers {{ baseline_config_user_name }} {{ baseline_config_admin_users | map(attribute='name') | join(' ') }}
 
 # Features
 X11Forwarding {{ 'yes' if baseline_config_ssh_x11_forwarding else 'no' }}
