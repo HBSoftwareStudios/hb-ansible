@@ -2,12 +2,8 @@
 # Vault-encrypted secrets — placeholders
 # Encrypt with: ansible-vault encrypt_string
 
-# SSH public key for Ansible user
-vault_ansible_ssh_pubkey: "PLACEHOLDER_SSH_PUBKEY"
-
-# SSH public keys for admin users
-vault_alex_ssh_pubkey: "PLACEHOLDER_SSH_PUBKEY_ALEX"
-vault_sina_ssh_pubkey: "PLACEHOLDER_SSH_PUBKEY_SINA"
+# SSH public key for admin user
+vault_hbadmin_ssh_pubkey: "PLACEHOLDER_SSH_PUBKEY_HBADMIN"
 
 vault_nextcloud_db_password: !vault |
           $ANSIBLE_VAULT;1.1;AES256

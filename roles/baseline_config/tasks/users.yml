@@ -11,13 +11,6 @@
     state: present
   no_log: true
 
-- name: Deploy SSH public key for Ansible user
-  ansible.posix.authorized_key:
-    user: "{{ baseline_config_user_name }}"
-    key: "{{ vault_ansible_ssh_pubkey }}"
-    state: present
-    exclusive: true
-
 - name: Configure passwordless sudo for Ansible user
   ansible.builtin.copy:
     dest: "/etc/sudoers.d/{{ baseline_config_user_name }}"

@@ -4,16 +4,14 @@
 # SSH port — used as ansible_port for connections
 ansible_port: "{{ baseline_config_ssh_port }}"
 
-# Admin users
+# Admin user
 baseline_config_admin_users:
-  - name: alex
-    ssh_pubkey: "{{ vault_alex_ssh_pubkey }}"
-  - name: sina
-    ssh_pubkey: "{{ vault_sina_ssh_pubkey }}"
+  - name: hbadmin
+    ssh_pubkey: "{{ vault_hbadmin_ssh_pubkey }}"
 
-# Service users — explicit to avoid index dependency on admin_users
-caddy_user: alex
-service_nextcloud_user: alex
+# Service user
+caddy_user: hbadmin
+service_nextcloud_user: hbadmin
 
 # Caddy — Let's Encrypt email
 caddy_email: ""  # PLACEHOLDER — e.g. admin@example.com
