@@ -1,0 +1,30 @@
+---
+# User running the Vaultwarden containers
+service_vaultwarden_user: "{{ baseline_config_admin_users[0].name }}"
+
+# Base directory for Vaultwarden files
+service_vaultwarden_base_dir: /opt/vaultwarden
+
+# Domain — REQUIRED, set in host/group vars
+service_vaultwarden_domain: ""
+
+# Container images — pin to specific versions
+service_vaultwarden_image: docker.io/vaultwarden/server:1.32-alpine
+service_vaultwarden_db_image: docker.io/library/postgres:16-alpine
+
+# Database
+service_vaultwarden_db_name: vaultwarden
+service_vaultwarden_db_user: vaultwarden
+service_vaultwarden_db_password: "{{ vault_vaultwarden_db_password }}"
+
+# Admin panel token (set empty string to disable admin panel)
+service_vaultwarden_admin_token: "{{ vault_vaultwarden_admin_token }}"
+
+# Security
+service_vaultwarden_signups_allowed: "false"
+
+# Podman network (shared with Caddy)
+service_vaultwarden_network: "{{ caddy_network }}"
+
+# Caddy base directory for site config drop-in
+service_vaultwarden_caddy_base_dir: "{{ caddy_base_dir | default('/opt/caddy') }}"

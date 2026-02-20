@@ -1,4 +1,4 @@
 [test_servers]
 ansible-test-server-auto
 
-[testservers:vars]
+[test_servers:vars]

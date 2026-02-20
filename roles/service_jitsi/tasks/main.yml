@@ -1,0 +1,8 @@
+---
+- name: Set up Jitsi prerequisites
+  ansible.builtin.import_tasks: setup.yml
+  tags: jitsi_setup
+
+- name: Deploy Jitsi stack
+  ansible.builtin.import_tasks: deploy.yml
+  tags: jitsi

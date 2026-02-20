@@ -1,0 +1,84 @@
+---
+- name: Look up Jitsi user UID
+  ansible.builtin.getent:
+    database: passwd
+    key: "{{ service_jitsi_user }}"
+  register: service_jitsi_getent
+
+- name: Set Jitsi user UID fact
+  ansible.builtin.set_fact:
+    service_jitsi_uid: "{{ service_jitsi_getent.ansible_facts.getent_passwd[service_jitsi_user][1] }}"
+
+- name: Look up Caddy user UID for handler
+  ansible.builtin.getent:
+    database: passwd
+    key: "{{ caddy_user }}"
+  register: service_jitsi_caddy_getent
+
+- name: Set Caddy user UID fact for handler
+  ansible.builtin.set_fact:
+    service_jitsi_caddy_uid: "{{ service_jitsi_caddy_getent.ansible_facts.getent_passwd[caddy_user][1] }}"
+
+- name: Create Jitsi directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ service_jitsi_user }}"
+    group: "{{ service_jitsi_user }}"
+    mode: "0755"
+  loop:
+    - "{{ service_jitsi_base_dir }}"
+    - "{{ service_jitsi_base_dir }}/web"
+    - "{{ service_jitsi_base_dir }}/prosody/config"
+    - "{{ service_jitsi_base_dir }}/prosody/plugins"
+    - "{{ service_jitsi_base_dir }}/jicofo"
+    - "{{ service_jitsi_base_dir }}/jvb"
+
+- name: Template Jitsi environment file
+  ansible.builtin.template:
+    src: jitsi.env.j2
+    dest: "{{ service_jitsi_base_dir }}/jitsi.env"
+    owner: "{{ service_jitsi_user }}"
+    group: "{{ service_jitsi_user }}"
+    mode: "0600"
+  no_log: true
+  notify: Restart jitsi
+
+- name: Template Jitsi compose file
+  ansible.builtin.template:
+    src: jitsi-compose.yml.j2
+    dest: "{{ service_jitsi_base_dir }}/compose.yml"
+    owner: "{{ service_jitsi_user }}"
+    group: "{{ service_jitsi_user }}"
+    mode: "0644"
+  notify: Restart jitsi
+
+- name: Template Jitsi Caddy site config
+  ansible.builtin.template:
+    src: jitsi.caddy.j2
+    dest: "{{ service_jitsi_caddy_base_dir }}/sites/jitsi.caddy"
+    owner: "{{ service_jitsi_user }}"
+    group: "{{ service_jitsi_user }}"
+    mode: "0644"
+  notify: Reload caddy for jitsi
+
+- name: Check if Jitsi web container is running
+  ansible.builtin.command:
+    cmd: podman ps --filter name=jitsi-web --format {{ '{{.Names}}' }}
+  become: true
+  become_user: "{{ service_jitsi_user }}"
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ service_jitsi_uid }}"
+  register: service_jitsi_running
+  changed_when: false
+
+- name: Start Jitsi stack
+  ansible.builtin.command:
+    cmd: podman-compose up -d
+    chdir: "{{ service_jitsi_base_dir }}"
+  become: true
+  become_user: "{{ service_jitsi_user }}"
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ service_jitsi_uid }}"
+  when: "'jitsi-web' not in service_jitsi_running.stdout"
+  changed_when: true

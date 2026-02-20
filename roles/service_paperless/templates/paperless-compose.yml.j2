@@ -1,0 +1,50 @@
+# {{ ansible_managed }}
+services:
+  paperless:
+    image: {{ service_paperless_image }}
+    container_name: paperless
+    restart: unless-stopped
+    env_file: paperless.env
+    volumes:
+      - {{ service_paperless_base_dir }}/data:/usr/src/paperless/data
+      - {{ service_paperless_base_dir }}/media:/usr/src/paperless/media
+      - {{ service_paperless_base_dir }}/export:/usr/src/paperless/export
+      - {{ service_paperless_base_dir }}/consume:/usr/src/paperless/consume
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks:
+      - {{ service_paperless_network }}
+      - paperless_internal
+
+  db:
+    image: {{ service_paperless_db_image }}
+    container_name: paperless-db
+    restart: unless-stopped
+    env_file: paperless-db.env
+    volumes:
+      - {{ service_paperless_base_dir }}/db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U {{ service_paperless_db_user }}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - paperless_internal
+
+  redis:
+    image: {{ service_paperless_redis_image }}
+    container_name: paperless-redis
+    restart: unless-stopped
+    volumes:
+      - {{ service_paperless_base_dir }}/redis:/data
+    networks:
+      - paperless_internal
+
+networks:
+  {{ service_paperless_network }}:
+    external: true
+  paperless_internal:
+    driver: bridge

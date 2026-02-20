@@ -1,8 +1,9 @@
 ---
 # General variables for all hosts
 
-# SSH port — used as ansible_port for connections
-ansible_port: 4343
+# SSH port — single source of truth
+baseline_config_ssh_port: 4343
+ansible_port: "{{ baseline_config_ssh_port }}"
 
 # Admin user
 baseline_config_admin_users:
@@ -16,5 +17,8 @@ service_nextcloud_user: hbadmin
 # Caddy — Let's Encrypt email
 caddy_email: ""  # PLACEHOLDER — e.g. admin@example.com
 
-# Nextcloud — domain
+# Service domains
 service_nextcloud_domain: ""  # PLACEHOLDER — e.g. cloud.example.com
+service_vaultwarden_domain: ""  # PLACEHOLDER — e.g. vault.example.com
+service_paperless_domain: ""  # PLACEHOLDER — e.g. docs.example.com
+service_jitsi_domain: ""  # PLACEHOLDER — e.g. meet.example.com

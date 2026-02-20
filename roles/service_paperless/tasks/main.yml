@@ -1,0 +1,4 @@
+---
+- name: Deploy Paperless stack
+  ansible.builtin.import_tasks: deploy.yml
+  tags: paperless

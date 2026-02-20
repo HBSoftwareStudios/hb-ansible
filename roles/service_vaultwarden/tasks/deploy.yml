@@ -1,0 +1,91 @@
+---
+- name: Look up Vaultwarden user UID
+  ansible.builtin.getent:
+    database: passwd
+    key: "{{ service_vaultwarden_user }}"
+  register: service_vaultwarden_getent
+
+- name: Set Vaultwarden user UID fact
+  ansible.builtin.set_fact:
+    service_vaultwarden_uid: "{{ service_vaultwarden_getent.ansible_facts.getent_passwd[service_vaultwarden_user][1] }}"
+
+- name: Look up Caddy user UID for handler
+  ansible.builtin.getent:
+    database: passwd
+    key: "{{ caddy_user }}"
+  register: service_vaultwarden_caddy_getent
+
+- name: Set Caddy user UID fact for handler
+  ansible.builtin.set_fact:
+    service_vaultwarden_caddy_uid: "{{ service_vaultwarden_caddy_getent.ansible_facts.getent_passwd[caddy_user][1] }}"
+
+- name: Create Vaultwarden directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ service_vaultwarden_user }}"
+    group: "{{ service_vaultwarden_user }}"
+    mode: "0755"
+  loop:
+    - "{{ service_vaultwarden_base_dir }}"
+    - "{{ service_vaultwarden_base_dir }}/data"
+    - "{{ service_vaultwarden_base_dir }}/db"
+
+- name: Template Vaultwarden environment file
+  ansible.builtin.template:
+    src: vaultwarden.env.j2
+    dest: "{{ service_vaultwarden_base_dir }}/vaultwarden.env"
+    owner: "{{ service_vaultwarden_user }}"
+    group: "{{ service_vaultwarden_user }}"
+    mode: "0600"
+  no_log: true
+  notify: Restart vaultwarden
+
+- name: Template Vaultwarden database environment file
+  ansible.builtin.template:
+    src: vaultwarden-db.env.j2
+    dest: "{{ service_vaultwarden_base_dir }}/vaultwarden-db.env"
+    owner: "{{ service_vaultwarden_user }}"
+    group: "{{ service_vaultwarden_user }}"
+    mode: "0600"
+  no_log: true
+  notify: Restart vaultwarden
+
+- name: Template Vaultwarden compose file
+  ansible.builtin.template:
+    src: vaultwarden-compose.yml.j2
+    dest: "{{ service_vaultwarden_base_dir }}/compose.yml"
+    owner: "{{ service_vaultwarden_user }}"
+    group: "{{ service_vaultwarden_user }}"
+    mode: "0644"
+  notify: Restart vaultwarden
+
+- name: Template Vaultwarden Caddy site config
+  ansible.builtin.template:
+    src: vaultwarden.caddy.j2
+    dest: "{{ service_vaultwarden_caddy_base_dir }}/sites/vaultwarden.caddy"
+    owner: "{{ service_vaultwarden_user }}"
+    group: "{{ service_vaultwarden_user }}"
+    mode: "0644"
+  notify: Reload caddy for vaultwarden
+
+- name: Check if Vaultwarden container is running
+  ansible.builtin.command:
+    cmd: podman ps --filter name=vaultwarden --format {{ '{{.Names}}' }}
+  become: true
+  become_user: "{{ service_vaultwarden_user }}"
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ service_vaultwarden_uid }}"
+  register: service_vaultwarden_running
+  changed_when: false
+
+- name: Start Vaultwarden stack
+  ansible.builtin.command:
+    cmd: podman-compose up -d
+    chdir: "{{ service_vaultwarden_base_dir }}"
+  become: true
+  become_user: "{{ service_vaultwarden_user }}"
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ service_vaultwarden_uid }}"
+  when: "'vaultwarden' not in service_vaultwarden_running.stdout"
+  changed_when: true

@@ -1,0 +1,95 @@
+---
+- name: Look up Paperless user UID
+  ansible.builtin.getent:
+    database: passwd
+    key: "{{ service_paperless_user }}"
+  register: service_paperless_getent
+
+- name: Set Paperless user UID fact
+  ansible.builtin.set_fact:
+    service_paperless_uid: "{{ service_paperless_getent.ansible_facts.getent_passwd[service_paperless_user][1] }}"
+
+- name: Look up Caddy user UID for handler
+  ansible.builtin.getent:
+    database: passwd
+    key: "{{ caddy_user }}"
+  register: service_paperless_caddy_getent
+
+- name: Set Caddy user UID fact for handler
+  ansible.builtin.set_fact:
+    service_paperless_caddy_uid: "{{ service_paperless_caddy_getent.ansible_facts.getent_passwd[caddy_user][1] }}"
+
+- name: Create Paperless directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ service_paperless_user }}"
+    group: "{{ service_paperless_user }}"
+    mode: "0755"
+  loop:
+    - "{{ service_paperless_base_dir }}"
+    - "{{ service_paperless_base_dir }}/data"
+    - "{{ service_paperless_base_dir }}/media"
+    - "{{ service_paperless_base_dir }}/export"
+    - "{{ service_paperless_base_dir }}/consume"
+    - "{{ service_paperless_base_dir }}/db"
+    - "{{ service_paperless_base_dir }}/redis"
+
+- name: Template Paperless environment file
+  ansible.builtin.template:
+    src: paperless.env.j2
+    dest: "{{ service_paperless_base_dir }}/paperless.env"
+    owner: "{{ service_paperless_user }}"
+    group: "{{ service_paperless_user }}"
+    mode: "0600"
+  no_log: true
+  notify: Restart paperless
+
+- name: Template Paperless database environment file
+  ansible.builtin.template:
+    src: paperless-db.env.j2
+    dest: "{{ service_paperless_base_dir }}/paperless-db.env"
+    owner: "{{ service_paperless_user }}"
+    group: "{{ service_paperless_user }}"
+    mode: "0600"
+  no_log: true
+  notify: Restart paperless
+
+- name: Template Paperless compose file
+  ansible.builtin.template:
+    src: paperless-compose.yml.j2
+    dest: "{{ service_paperless_base_dir }}/compose.yml"
+    owner: "{{ service_paperless_user }}"
+    group: "{{ service_paperless_user }}"
+    mode: "0644"
+  notify: Restart paperless
+
+- name: Template Paperless Caddy site config
+  ansible.builtin.template:
+    src: paperless.caddy.j2
+    dest: "{{ service_paperless_caddy_base_dir }}/sites/paperless.caddy"
+    owner: "{{ service_paperless_user }}"
+    group: "{{ service_paperless_user }}"
+    mode: "0644"
+  notify: Reload caddy for paperless
+
+- name: Check if Paperless container is running
+  ansible.builtin.command:
+    cmd: podman ps --filter name=paperless --format {{ '{{.Names}}' }}
+  become: true
+  become_user: "{{ service_paperless_user }}"
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ service_paperless_uid }}"
+  register: service_paperless_running
+  changed_when: false
+
+- name: Start Paperless stack
+  ansible.builtin.command:
+    cmd: podman-compose up -d
+    chdir: "{{ service_paperless_base_dir }}"
+  become: true
+  become_user: "{{ service_paperless_user }}"
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ service_paperless_uid }}"
+  when: "'paperless' not in service_paperless_running.stdout"
+  changed_when: true

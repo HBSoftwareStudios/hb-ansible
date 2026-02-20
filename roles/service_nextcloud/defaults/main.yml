@@ -22,7 +22,7 @@ service_nextcloud_admin_user: admin
 service_nextcloud_admin_password: "{{ vault_nextcloud_admin_password }}"
 
 # Podman network (shared with Caddy)
-service_nextcloud_network: caddy_network
+service_nextcloud_network: "{{ caddy_network }}"
 
 # Upload limit
 service_nextcloud_max_upload_size: 10G

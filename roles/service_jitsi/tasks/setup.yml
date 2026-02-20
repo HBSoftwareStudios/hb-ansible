@@ -1,0 +1,6 @@
+---
+- name: Allow JVB media traffic through firewall
+  community.general.ufw:
+    rule: allow
+    port: "{{ service_jitsi_jvb_port | string }}"
+    proto: udp

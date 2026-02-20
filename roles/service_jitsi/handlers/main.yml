@@ -1,0 +1,19 @@
+---
+- name: Restart jitsi
+  ansible.builtin.shell:
+    cmd: podman-compose down && podman-compose up -d
+    chdir: "{{ service_jitsi_base_dir }}"
+  become: true
+  become_user: "{{ service_jitsi_user }}"
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ service_jitsi_uid }}"
+  changed_when: false
+
+- name: Reload caddy for jitsi
+  ansible.builtin.command:
+    cmd: podman exec caddy caddy reload --config /etc/caddy/Caddyfile
+  become: true
+  become_user: "{{ caddy_user }}"
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ service_jitsi_caddy_uid }}"
+  changed_when: false

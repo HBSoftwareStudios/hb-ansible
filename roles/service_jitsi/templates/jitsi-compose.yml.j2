@@ -1,0 +1,55 @@
+# {{ ansible_managed }}
+services:
+  web:
+    image: {{ service_jitsi_web_image }}
+    container_name: jitsi-web
+    restart: unless-stopped
+    env_file: jitsi.env
+    volumes:
+      - {{ service_jitsi_base_dir }}/web:/config
+    networks:
+      - {{ service_jitsi_network }}
+      - jitsi_internal
+
+  prosody:
+    image: {{ service_jitsi_prosody_image }}
+    container_name: jitsi-prosody
+    restart: unless-stopped
+    env_file: jitsi.env
+    volumes:
+      - {{ service_jitsi_base_dir }}/prosody/config:/config
+      - {{ service_jitsi_base_dir }}/prosody/plugins:/prosody-plugins-custom
+    networks:
+      - jitsi_internal
+
+  jicofo:
+    image: {{ service_jitsi_jicofo_image }}
+    container_name: jitsi-jicofo
+    restart: unless-stopped
+    env_file: jitsi.env
+    volumes:
+      - {{ service_jitsi_base_dir }}/jicofo:/config
+    depends_on:
+      - prosody
+    networks:
+      - jitsi_internal
+
+  jvb:
+    image: {{ service_jitsi_jvb_image }}
+    container_name: jitsi-jvb
+    restart: unless-stopped
+    env_file: jitsi.env
+    ports:
+      - "{{ service_jitsi_jvb_port }}:{{ service_jitsi_jvb_port }}/udp"
+    volumes:
+      - {{ service_jitsi_base_dir }}/jvb:/config
+    depends_on:
+      - prosody
+    networks:
+      - jitsi_internal
+
+networks:
+  {{ service_jitsi_network }}:
+    external: true
+  jitsi_internal:
+    driver: bridge

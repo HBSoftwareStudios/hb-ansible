@@ -1,0 +1,36 @@
+# {{ ansible_managed }}
+services:
+  vaultwarden:
+    image: {{ service_vaultwarden_image }}
+    container_name: vaultwarden
+    restart: unless-stopped
+    env_file: vaultwarden.env
+    volumes:
+      - {{ service_vaultwarden_base_dir }}/data:/data
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - {{ service_vaultwarden_network }}
+      - vaultwarden_internal
+
+  db:
+    image: {{ service_vaultwarden_db_image }}
+    container_name: vaultwarden-db
+    restart: unless-stopped
+    env_file: vaultwarden-db.env
+    volumes:
+      - {{ service_vaultwarden_base_dir }}/db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U {{ service_vaultwarden_db_user }}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - vaultwarden_internal
+
+networks:
+  {{ service_vaultwarden_network }}:
+    external: true
+  vaultwarden_internal:
+    driver: bridge

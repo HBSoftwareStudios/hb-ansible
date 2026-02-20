@@ -1,0 +1,35 @@
+---
+# User running the Paperless containers
+service_paperless_user: "{{ baseline_config_admin_users[0].name }}"
+
+# Base directory for Paperless files
+service_paperless_base_dir: /opt/paperless
+
+# Domain — REQUIRED, set in host/group vars
+service_paperless_domain: ""
+
+# Container images — pin to specific versions
+service_paperless_image: docker.io/paperlessngx/paperless-ngx:2.12
+service_paperless_db_image: docker.io/library/postgres:16-alpine
+service_paperless_redis_image: docker.io/library/redis:7-alpine
+
+# Database
+service_paperless_db_name: paperless
+service_paperless_db_user: paperless
+service_paperless_db_password: "{{ vault_paperless_db_password }}"
+
+# Application secret key
+service_paperless_secret_key: "{{ vault_paperless_secret_key }}"
+
+# Admin
+service_paperless_admin_user: admin
+service_paperless_admin_password: "{{ vault_paperless_admin_password }}"
+
+# OCR languages (+ separated)
+service_paperless_ocr_language: deu+eng
+
+# Podman network (shared with Caddy)
+service_paperless_network: "{{ caddy_network }}"
+
+# Caddy base directory for site config drop-in
+service_paperless_caddy_base_dir: "{{ caddy_base_dir | default('/opt/caddy') }}"

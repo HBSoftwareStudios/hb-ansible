@@ -1,0 +1,38 @@
+---
+# User running the Jitsi containers
+service_jitsi_user: "{{ baseline_config_admin_users[0].name }}"
+
+# Base directory for Jitsi files
+service_jitsi_base_dir: /opt/jitsi
+
+# Domain — REQUIRED, set in host/group vars
+service_jitsi_domain: ""
+
+# Container images — pin to specific versions
+service_jitsi_web_image: docker.io/jitsi/web:stable-9646
+service_jitsi_prosody_image: docker.io/jitsi/prosody:stable-9646
+service_jitsi_jicofo_image: docker.io/jitsi/jicofo:stable-9646
+service_jitsi_jvb_image: docker.io/jitsi/jvb:stable-9646
+
+# JVB media port (UDP, must be opened in firewall)
+service_jitsi_jvb_port: 10000
+
+# XMPP domains
+service_jitsi_xmpp_domain: meet.jitsi
+service_jitsi_xmpp_auth_domain: auth.meet.jitsi
+service_jitsi_xmpp_guest_domain: guest.meet.jitsi
+service_jitsi_xmpp_muc_domain: muc.meet.jitsi
+service_jitsi_xmpp_internal_muc_domain: internal-muc.meet.jitsi
+
+# Auth passwords (from vault)
+service_jitsi_jicofo_auth_password: "{{ vault_jitsi_jicofo_auth_password }}"
+service_jitsi_jvb_auth_password: "{{ vault_jitsi_jvb_auth_password }}"
+
+# Timezone
+service_jitsi_timezone: Europe/Berlin
+
+# Podman network (shared with Caddy)
+service_jitsi_network: "{{ caddy_network }}"
+
+# Caddy base directory for site config drop-in
+service_jitsi_caddy_base_dir: "{{ caddy_base_dir | default('/opt/caddy') }}"

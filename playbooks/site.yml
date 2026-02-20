@@ -7,3 +7,6 @@
     - baseline_config
     - caddy
     - service_nextcloud
+    - service_vaultwarden
+    - service_paperless
+    - service_jitsi
