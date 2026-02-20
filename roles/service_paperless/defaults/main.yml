@@ -10,8 +10,8 @@ service_paperless_domain: ""
 
 # Container images — pin to specific versions
 service_paperless_image: docker.io/paperlessngx/paperless-ngx:2.12
-service_paperless_db_image: docker.io/library/postgres:16-alpine
-service_paperless_redis_image: docker.io/library/redis:7-alpine
+service_paperless_db_image: docker.io/library/postgres:16.6-alpine
+service_paperless_redis_image: docker.io/library/redis:7.4-alpine
 
 # Database
 service_paperless_db_name: paperless

@@ -28,6 +28,13 @@ service_jitsi_xmpp_internal_muc_domain: internal-muc.meet.jitsi
 service_jitsi_jicofo_auth_password: "{{ vault_jitsi_jicofo_auth_password }}"
 service_jitsi_jvb_auth_password: "{{ vault_jitsi_jvb_auth_password }}"
 
+# Authentication (set to true to require login for room creation)
+service_jitsi_enable_auth: false
+service_jitsi_auth_type: internal
+
+# STUN servers
+service_jitsi_stun_servers: "meet-jit-si-turnrelay.jitsi.net:443"
+
 # Timezone
 service_jitsi_timezone: Europe/Berlin
 

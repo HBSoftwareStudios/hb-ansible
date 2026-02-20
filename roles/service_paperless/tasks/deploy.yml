@@ -31,9 +31,16 @@
     - "{{ service_paperless_base_dir }}/data"
     - "{{ service_paperless_base_dir }}/media"
     - "{{ service_paperless_base_dir }}/export"
-    - "{{ service_paperless_base_dir }}/consume"
     - "{{ service_paperless_base_dir }}/db"
     - "{{ service_paperless_base_dir }}/redis"
+
+- name: Create Paperless consume directory with restricted permissions
+  ansible.builtin.file:
+    path: "{{ service_paperless_base_dir }}/consume"
+    state: directory
+    owner: "{{ service_paperless_user }}"
+    group: "{{ service_paperless_user }}"
+    mode: "0700"
 
 - name: Template Paperless environment file
   ansible.builtin.template:

@@ -10,7 +10,7 @@ service_nextcloud_domain: ""
 
 # Container images — pin to specific versions
 service_nextcloud_image: docker.io/library/nextcloud:30-apache
-service_nextcloud_db_image: docker.io/library/postgres:16-alpine
+service_nextcloud_db_image: docker.io/library/postgres:16.6-alpine
 
 # Database
 service_nextcloud_db_name: nextcloud

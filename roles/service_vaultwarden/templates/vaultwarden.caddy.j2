@@ -1,4 +1,15 @@
 # {{ ansible_managed }}
 {{ service_vaultwarden_domain }} {
-    reverse_proxy vaultwarden:80
+    handle /admin* {
+        @blocked {
+            not remote_ip {{ service_vaultwarden_admin_allowed_ips | join(' ') }}
+        }
+        respond @blocked 403
+
+        reverse_proxy vaultwarden:80
+    }
+
+    handle {
+        reverse_proxy vaultwarden:80
+    }
 }

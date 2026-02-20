@@ -10,7 +10,7 @@ service_vaultwarden_domain: ""
 
 # Container images — pin to specific versions
 service_vaultwarden_image: docker.io/vaultwarden/server:1.32-alpine
-service_vaultwarden_db_image: docker.io/library/postgres:16-alpine
+service_vaultwarden_db_image: docker.io/library/postgres:16.6-alpine
 
 # Database
 service_vaultwarden_db_name: vaultwarden
@@ -22,6 +22,9 @@ service_vaultwarden_admin_token: "{{ vault_vaultwarden_admin_token }}"
 
 # Security
 service_vaultwarden_signups_allowed: "false"
+service_vaultwarden_admin_allowed_ips:
+  - 127.0.0.1
+  - "::1"
 
 # Podman network (shared with Caddy)
 service_vaultwarden_network: "{{ caddy_network }}"
