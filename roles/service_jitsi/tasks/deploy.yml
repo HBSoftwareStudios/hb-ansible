@@ -19,15 +19,22 @@
   ansible.builtin.set_fact:
     service_jitsi_caddy_uid: "{{ service_jitsi_caddy_getent.ansible_facts.getent_passwd[caddy_user][1] }}"
 
-- name: Create Jitsi directories
+- name: Create Jitsi base directory
   ansible.builtin.file:
-    path: "{{ item }}"
+    path: "{{ service_jitsi_base_dir }}"
     state: directory
     owner: "{{ service_jitsi_user }}"
     group: "{{ service_jitsi_user }}"
     mode: "0755"
+
+- name: Create Jitsi data directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0755"
+  become: true
+  become_user: "{{ service_jitsi_user }}"
   loop:
-    - "{{ service_jitsi_base_dir }}"
     - "{{ service_jitsi_base_dir }}/web"
     - "{{ service_jitsi_base_dir }}/prosody/config"
     - "{{ service_jitsi_base_dir }}/prosody/plugins"

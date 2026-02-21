@@ -47,5 +47,6 @@ Standard Ansible directory layout:
 - **Structure**: Strictly follow the existing directory and file structure. Do not introduce patterns that deviate from existing roles.
 - **Tags**: Every task file imported in `tasks/main.yml` must have a corresponding tag. Tags allow selective deployment via `--tags`.
 - **Idempotency**: All tasks must be idempotent. `changed` status should only occur on real changes. Handlers should use `changed_when: false` for command modules.
+- **Warnings**: Ansible warnings must be investigated and resolved immediately. The playbook should run without any warnings.
 - **Linting**: `ansible-lint` must pass cleanly (0 errors, 0 warnings).
 - **Commits**: Never create commits autonomously. Commits are done exclusively via the `/ship` skill.

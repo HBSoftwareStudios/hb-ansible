@@ -19,15 +19,22 @@
   ansible.builtin.set_fact:
     service_paperless_caddy_uid: "{{ service_paperless_caddy_getent.ansible_facts.getent_passwd[caddy_user][1] }}"
 
-- name: Create Paperless directories
+- name: Create Paperless base directory
   ansible.builtin.file:
-    path: "{{ item }}"
+    path: "{{ service_paperless_base_dir }}"
     state: directory
     owner: "{{ service_paperless_user }}"
     group: "{{ service_paperless_user }}"
     mode: "0755"
+
+- name: Create Paperless data directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0755"
+  become: true
+  become_user: "{{ service_paperless_user }}"
   loop:
-    - "{{ service_paperless_base_dir }}"
     - "{{ service_paperless_base_dir }}/data"
     - "{{ service_paperless_base_dir }}/media"
     - "{{ service_paperless_base_dir }}/export"
@@ -38,9 +45,9 @@
   ansible.builtin.file:
     path: "{{ service_paperless_base_dir }}/consume"
     state: directory
-    owner: "{{ service_paperless_user }}"
-    group: "{{ service_paperless_user }}"
     mode: "0700"
+  become: true
+  become_user: "{{ service_paperless_user }}"
 
 - name: Template Paperless environment file
   ansible.builtin.template:

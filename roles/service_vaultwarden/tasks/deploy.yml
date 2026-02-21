@@ -19,15 +19,22 @@
   ansible.builtin.set_fact:
     service_vaultwarden_caddy_uid: "{{ service_vaultwarden_caddy_getent.ansible_facts.getent_passwd[caddy_user][1] }}"
 
-- name: Create Vaultwarden directories
+- name: Create Vaultwarden base directory
   ansible.builtin.file:
-    path: "{{ item }}"
+    path: "{{ service_vaultwarden_base_dir }}"
     state: directory
     owner: "{{ service_vaultwarden_user }}"
     group: "{{ service_vaultwarden_user }}"
     mode: "0755"
+
+- name: Create Vaultwarden data directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0755"
+  become: true
+  become_user: "{{ service_vaultwarden_user }}"
   loop:
-    - "{{ service_vaultwarden_base_dir }}"
     - "{{ service_vaultwarden_base_dir }}/data"
     - "{{ service_vaultwarden_base_dir }}/db"
 

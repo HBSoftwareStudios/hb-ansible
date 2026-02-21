@@ -1,4 +1,4 @@
 # {{ ansible_managed }}
 # Podman registries managed by Ansible
 
-unqualified-search-registries = [{{ baseline_config_podman_registries | map('regex_replace', '^(.*)$', '"\1"') | join(', ') }}]
+unqualified-search-registries = [{% for reg in baseline_config_podman_registries %}"{{ reg }}"{% if not loop.last %}, {% endif %}{% endfor %}]

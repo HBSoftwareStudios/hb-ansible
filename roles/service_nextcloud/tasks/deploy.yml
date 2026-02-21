@@ -19,15 +19,22 @@
   ansible.builtin.set_fact:
     service_nextcloud_caddy_uid: "{{ service_nextcloud_caddy_getent.ansible_facts.getent_passwd[caddy_user][1] }}"
 
-- name: Create Nextcloud directories
+- name: Create Nextcloud base directory
   ansible.builtin.file:
-    path: "{{ item }}"
+    path: "{{ service_nextcloud_base_dir }}"
     state: directory
     owner: "{{ service_nextcloud_user }}"
     group: "{{ service_nextcloud_user }}"
     mode: "0755"
+
+- name: Create Nextcloud data directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0755"
+  become: true
+  become_user: "{{ service_nextcloud_user }}"
   loop:
-    - "{{ service_nextcloud_base_dir }}"
     - "{{ service_nextcloud_base_dir }}/data"
     - "{{ service_nextcloud_base_dir }}/db"
 

@@ -23,8 +23,7 @@ baseline_config_ntp_fallback_servers:
   - ntp.ubuntu.com
 
 # Firewall (UFW)
-baseline_config_ufw_allowed_ports:
-  - { port: "{{ baseline_config_ssh_port }}", proto: tcp }
+baseline_config_ufw_allowed_ports: []
 
 # Fail2ban
 baseline_config_fail2ban_bantime: 3600
