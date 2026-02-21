@@ -3,8 +3,12 @@
   "python-envs.pythonProjects": [],
   "files.associations": {
     "*.yml": "ansible",
-    ".j2": "ansible.jinja"
+    "*.j2": "ansible-jinja",
+    "*.yml.j2": "ansible.jinja",
+    "*compose*.yml.j2": "ansible.jinja",
+    "*-compose.yml.j2": "ansible.jinja"
   },
   "ansible.python.interpreterPath": "/opt/homebrew/bin/python3",
-  "yaml.customTags": ["!vault scalar"]
+  "yaml.customTags": ["!vault scalar"],
+  "yaml.validate": false
 }
