@@ -3,4 +3,14 @@
 # Generate password hashes with:
 #   podman exec authelia authelia crypto hash generate argon2
 ---
-users: {}
+users:
+{% for username, user in service_authelia_users.items() %}
+  {{ username }}:
+    displayname: {{ user.displayname }}
+    password: {{ lookup('vars', 'vault_authelia_user_' + username + '_password') }}
+    email: {{ user.email }}
+    groups:
+{% for group in user.groups | default([]) %}
+      - {{ group }}
+{% endfor %}
+{% endfor %}

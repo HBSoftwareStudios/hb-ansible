@@ -27,16 +27,25 @@
     group: "{{ service_vaultwarden_user }}"
     mode: "0755"
 
-- name: Create Vaultwarden data directories
-  ansible.builtin.file:
+- name: Check if Vaultwarden data directories exist
+  ansible.builtin.stat:
     path: "{{ item }}"
-    state: directory
-    mode: "0755"
-  become: true
-  become_user: "{{ service_vaultwarden_user }}"
+  register: service_vaultwarden_data_dirs
   loop:
     - "{{ service_vaultwarden_base_dir }}/data"
     - "{{ service_vaultwarden_base_dir }}/db"
+
+- name: Create Vaultwarden data directories
+  ansible.builtin.file:
+    path: "{{ item.item }}"
+    state: directory
+    owner: "{{ service_vaultwarden_user }}"
+    group: "{{ service_vaultwarden_user }}"
+    mode: "0755"
+  loop: "{{ service_vaultwarden_data_dirs.results }}"
+  loop_control:
+    label: "{{ item.item }}"
+  when: not item.stat.exists
 
 - name: Template Vaultwarden environment file
   ansible.builtin.template:

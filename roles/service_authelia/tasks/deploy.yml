@@ -27,17 +27,26 @@
     group: "{{ service_authelia_user }}"
     mode: "0755"
 
-- name: Create Authelia data directories
-  ansible.builtin.file:
+- name: Check if Authelia data directories exist
+  ansible.builtin.stat:
     path: "{{ item }}"
-    state: directory
-    mode: "0755"
-  become: true
-  become_user: "{{ service_authelia_user }}"
+  register: service_authelia_data_dirs
   loop:
     - "{{ service_authelia_base_dir }}/config"
     - "{{ service_authelia_base_dir }}/db"
     - "{{ service_authelia_base_dir }}/redis"
+
+- name: Create Authelia data directories
+  ansible.builtin.file:
+    path: "{{ item.item }}"
+    state: directory
+    owner: "{{ service_authelia_user }}"
+    group: "{{ service_authelia_user }}"
+    mode: "0755"
+  loop: "{{ service_authelia_data_dirs.results }}"
+  loop_control:
+    label: "{{ item.item }}"
+  when: not item.stat.exists
 
 - name: Template Authelia configuration file
   ansible.builtin.template:

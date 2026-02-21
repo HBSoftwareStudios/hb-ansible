@@ -27,27 +27,38 @@
     group: "{{ service_paperless_user }}"
     mode: "0755"
 
-- name: Create Paperless data directories
-  ansible.builtin.file:
+- name: Check if Paperless data directories exist
+  ansible.builtin.stat:
     path: "{{ item }}"
-    state: directory
-    mode: "0755"
-  become: true
-  become_user: "{{ service_paperless_user }}"
+  register: service_paperless_data_dirs
   loop:
     - "{{ service_paperless_base_dir }}/data"
     - "{{ service_paperless_base_dir }}/media"
     - "{{ service_paperless_base_dir }}/export"
     - "{{ service_paperless_base_dir }}/db"
     - "{{ service_paperless_base_dir }}/redis"
+    - "{{ service_paperless_base_dir }}/consume"
+
+- name: Create Paperless data directories
+  ansible.builtin.file:
+    path: "{{ item.item }}"
+    state: directory
+    owner: "{{ service_paperless_user }}"
+    group: "{{ service_paperless_user }}"
+    mode: "0755"
+  loop: "{{ service_paperless_data_dirs.results[:-1] }}"
+  loop_control:
+    label: "{{ item.item }}"
+  when: not item.stat.exists
 
 - name: Create Paperless consume directory with restricted permissions
   ansible.builtin.file:
     path: "{{ service_paperless_base_dir }}/consume"
     state: directory
+    owner: "{{ service_paperless_user }}"
+    group: "{{ service_paperless_user }}"
     mode: "0700"
-  become: true
-  become_user: "{{ service_paperless_user }}"
+  when: not service_paperless_data_dirs.results[-1].stat.exists
 
 - name: Template Paperless environment file
   ansible.builtin.template:

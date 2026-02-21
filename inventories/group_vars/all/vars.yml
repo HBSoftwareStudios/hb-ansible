@@ -28,5 +28,23 @@ service_paperless_domain: "paperless.nexus4-2.de"
 service_jitsi_domain: "meet.nexus4-2.de"
 service_wordpress_domain: "wp.nexus4-2.de"
 
+# Authelia users
+service_authelia_users:
+  admin:
+    displayname: "Admin"
+    email: "admin@auth.nexus4-2.de"
+    groups:
+      - admins
+  sina:
+    displayname: "Sina"
+    email: "sina@auth.nexus4-2.de"
+    groups:
+      - users
+  alex:
+    displayname: "Alex"
+    email: "alex@auth.nexus4-2.de"
+    groups:
+      - users
+
 # Vaultwarden — disable admin panel
 service_vaultwarden_admin_token: ""

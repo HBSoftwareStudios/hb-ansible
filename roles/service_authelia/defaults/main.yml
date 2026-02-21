@@ -40,6 +40,9 @@ service_authelia_paperless_domain: "{{ service_paperless_domain }}"
 service_authelia_jitsi_domain: "{{ service_jitsi_domain }}"
 service_authelia_wordpress_domain: "{{ service_wordpress_domain }}"
 
+# Authelia users — define in group_vars, passwords in vault
+service_authelia_users: {}
+
 # Podman network (shared with Caddy)
 service_authelia_network: "{{ service_caddy_network }}"
 

@@ -27,16 +27,25 @@
     group: "{{ service_wordpress_user }}"
     mode: "0755"
 
-- name: Create WordPress data directories
-  ansible.builtin.file:
+- name: Check if WordPress data directories exist
+  ansible.builtin.stat:
     path: "{{ item }}"
-    state: directory
-    mode: "0755"
-  become: true
-  become_user: "{{ service_wordpress_user }}"
+  register: service_wordpress_data_dirs
   loop:
     - "{{ service_wordpress_base_dir }}/data"
     - "{{ service_wordpress_base_dir }}/db"
+
+- name: Create WordPress data directories
+  ansible.builtin.file:
+    path: "{{ item.item }}"
+    state: directory
+    owner: "{{ service_wordpress_user }}"
+    group: "{{ service_wordpress_user }}"
+    mode: "0755"
+  loop: "{{ service_wordpress_data_dirs.results }}"
+  loop_control:
+    label: "{{ item.item }}"
+  when: not item.stat.exists
 
 - name: Template WordPress environment file
   ansible.builtin.template:

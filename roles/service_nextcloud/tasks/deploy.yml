@@ -27,16 +27,25 @@
     group: "{{ service_nextcloud_user }}"
     mode: "0755"
 
-- name: Create Nextcloud data directories
-  ansible.builtin.file:
+- name: Check if Nextcloud data directories exist
+  ansible.builtin.stat:
     path: "{{ item }}"
-    state: directory
-    mode: "0755"
-  become: true
-  become_user: "{{ service_nextcloud_user }}"
+  register: service_nextcloud_data_dirs
   loop:
     - "{{ service_nextcloud_base_dir }}/data"
     - "{{ service_nextcloud_base_dir }}/db"
+
+- name: Create Nextcloud data directories
+  ansible.builtin.file:
+    path: "{{ item.item }}"
+    state: directory
+    owner: "{{ service_nextcloud_user }}"
+    group: "{{ service_nextcloud_user }}"
+    mode: "0755"
+  loop: "{{ service_nextcloud_data_dirs.results }}"
+  loop_control:
+    label: "{{ item.item }}"
+  when: not item.stat.exists
 
 - name: Template Nextcloud environment file
   ansible.builtin.template:

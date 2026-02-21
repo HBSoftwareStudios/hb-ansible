@@ -27,19 +27,28 @@
     group: "{{ service_jitsi_user }}"
     mode: "0755"
 
-- name: Create Jitsi data directories
-  ansible.builtin.file:
+- name: Check if Jitsi data directories exist
+  ansible.builtin.stat:
     path: "{{ item }}"
-    state: directory
-    mode: "0755"
-  become: true
-  become_user: "{{ service_jitsi_user }}"
+  register: service_jitsi_data_dirs
   loop:
     - "{{ service_jitsi_base_dir }}/web"
     - "{{ service_jitsi_base_dir }}/prosody/config"
     - "{{ service_jitsi_base_dir }}/prosody/plugins"
     - "{{ service_jitsi_base_dir }}/jicofo"
     - "{{ service_jitsi_base_dir }}/jvb"
+
+- name: Create Jitsi data directories
+  ansible.builtin.file:
+    path: "{{ item.item }}"
+    state: directory
+    owner: "{{ service_jitsi_user }}"
+    group: "{{ service_jitsi_user }}"
+    mode: "0755"
+  loop: "{{ service_jitsi_data_dirs.results }}"
+  loop_control:
+    label: "{{ item.item }}"
+  when: not item.stat.exists
 
 - name: Template Jitsi environment file
   ansible.builtin.template:
