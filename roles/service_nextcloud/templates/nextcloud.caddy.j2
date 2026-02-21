@@ -1,5 +1,6 @@
 # {{ ansible_managed }}
 {{ service_nextcloud_domain }} {
+    header Strict-Transport-Security "max-age=15552000; includeSubDomains"
     reverse_proxy nextcloud:80
 
     request_body {

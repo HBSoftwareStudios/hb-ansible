@@ -30,6 +30,12 @@ service_nextcloud_oidc_client_secret: "{{ vault_authelia_oidc_nextcloud_client_s
 # Podman network (shared with Caddy)
 service_nextcloud_network: "{{ service_caddy_network }}"
 
+# Trusted proxies — Podman network CIDR range
+service_nextcloud_trusted_proxies: "10.89.0.0/16"
+
+# Maintenance window start hour (UTC), 1 = 02:00 CET
+service_nextcloud_maintenance_window_start: 1
+
 # Upload limit
 service_nextcloud_max_upload_size: 10G
 
