@@ -17,9 +17,13 @@ service_nextcloud_user: hbadmin
 # Caddy — Let's Encrypt email
 service_caddy_email: "alexander.baer02+letsencrypt@gmail.com"
 
+# Caddy — network aliases for internal service discovery
+service_caddy_network_aliases:
+  - "auth.nexus4-2.de"
+
 # Authelia
 service_authelia_domain: "auth.nexus4-2.de"
-service_authelia_cookie_domain: ".nexus4-2.de"
+service_authelia_cookie_domain: "nexus4-2.de"
 
 # Service domains
 service_nextcloud_domain: "nextcloud.nexus4-2.de"

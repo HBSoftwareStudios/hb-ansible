@@ -17,3 +17,6 @@
   environment:
     XDG_RUNTIME_DIR: "/run/user/{{ service_authelia_caddy_uid }}"
   changed_when: false
+  listen:
+    - Restart authelia
+    - Reload caddy for authelia

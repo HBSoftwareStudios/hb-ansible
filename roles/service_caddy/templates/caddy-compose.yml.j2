@@ -14,7 +14,15 @@ services:
       - {{ service_caddy_base_dir }}/data:/data
       - {{ service_caddy_base_dir }}/config:/config
     networks:
+{% if service_caddy_network_aliases | default([]) | length > 0 %}
+      {{ service_caddy_network }}:
+        aliases:
+{% for alias in service_caddy_network_aliases %}
+          - {{ alias }}
+{% endfor %}
+{% else %}
       - {{ service_caddy_network }}
+{% endif %}
 
 networks:
   {{ service_caddy_network }}:

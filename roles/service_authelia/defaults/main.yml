@@ -8,7 +8,7 @@ service_authelia_base_dir: /opt/authelia
 # Domain — REQUIRED, set in host/group vars
 service_authelia_domain: ""
 
-# Cookie domain (with leading dot for subdomain sharing)
+# Cookie domain (without leading dot)
 service_authelia_cookie_domain: ""
 
 # Container images — pin to specific versions
@@ -28,11 +28,17 @@ service_authelia_storage_encryption_key: "{{ vault_authelia_storage_encryption_k
 service_authelia_oidc_hmac_secret: "{{ vault_authelia_oidc_hmac_secret }}"
 service_authelia_oidc_jwks_private_key: "{{ vault_authelia_oidc_jwks_private_key }}"
 
-# OIDC client secrets — from vault
+# OIDC client secrets — plaintext for client apps, hashed for Authelia config
 service_authelia_oidc_nextcloud_client_secret: "{{ vault_authelia_oidc_nextcloud_client_secret }}"
 service_authelia_oidc_paperless_client_secret: "{{ vault_authelia_oidc_paperless_client_secret }}"
 service_authelia_oidc_jitsi_client_secret: "{{ vault_authelia_oidc_jitsi_client_secret }}"
 service_authelia_oidc_wordpress_client_secret: "{{ vault_authelia_oidc_wordpress_client_secret }}"
+
+# OIDC client secret hashes (pbkdf2-sha512) — for Authelia configuration
+service_authelia_oidc_nextcloud_client_secret_hash: "{{ vault_authelia_oidc_nextcloud_client_secret_hash }}"
+service_authelia_oidc_paperless_client_secret_hash: "{{ vault_authelia_oidc_paperless_client_secret_hash }}"
+service_authelia_oidc_jitsi_client_secret_hash: "{{ vault_authelia_oidc_jitsi_client_secret_hash }}"
+service_authelia_oidc_wordpress_client_secret_hash: "{{ vault_authelia_oidc_wordpress_client_secret_hash }}"
 
 # Service domains (for OIDC redirect URIs)
 service_authelia_nextcloud_domain: "{{ service_nextcloud_domain }}"

@@ -17,3 +17,6 @@
   environment:
     XDG_RUNTIME_DIR: "/run/user/{{ service_paperless_caddy_uid }}"
   changed_when: false
+  listen:
+    - Restart paperless
+    - Reload caddy for paperless

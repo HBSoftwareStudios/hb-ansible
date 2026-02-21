@@ -14,7 +14,6 @@ session:
   cookies:
     - domain: {{ service_authelia_cookie_domain }}
       authelia_url: https://{{ service_authelia_domain }}
-      default_redirection_url: https://{{ service_authelia_domain }}
   secret: {{ service_authelia_session_secret }}
   redis:
     host: authelia-redis
@@ -30,6 +29,11 @@ storage:
 
 access_control:
   default_policy: one_factor
+  rules:
+    - domain:
+        - "{{ service_authelia_cookie_domain }}"
+        - "*.{{ service_authelia_cookie_domain }}"
+      policy: one_factor
 
 notifier:
   filesystem:
@@ -48,7 +52,7 @@ identity_providers:
     clients:
       - client_id: nextcloud
         client_name: Nextcloud
-        client_secret: $plaintext${{ service_authelia_oidc_nextcloud_client_secret }}
+        client_secret: {{ service_authelia_oidc_nextcloud_client_secret_hash }}
         public: false
         authorization_policy: one_factor
         redirect_uris:
@@ -62,7 +66,7 @@ identity_providers:
 
       - client_id: paperless
         client_name: Paperless-ngx
-        client_secret: $plaintext${{ service_authelia_oidc_paperless_client_secret }}
+        client_secret: {{ service_authelia_oidc_paperless_client_secret_hash }}
         public: false
         authorization_policy: one_factor
         redirect_uris:
@@ -76,7 +80,7 @@ identity_providers:
 
       - client_id: jitsi
         client_name: Jitsi Meet
-        client_secret: $plaintext${{ service_authelia_oidc_jitsi_client_secret }}
+        client_secret: {{ service_authelia_oidc_jitsi_client_secret_hash }}
         public: false
         authorization_policy: one_factor
         redirect_uris:
@@ -89,7 +93,7 @@ identity_providers:
 
       - client_id: wordpress
         client_name: WordPress
-        client_secret: $plaintext${{ service_authelia_oidc_wordpress_client_secret }}
+        client_secret: {{ service_authelia_oidc_wordpress_client_secret_hash }}
         public: false
         authorization_policy: one_factor
         redirect_uris:

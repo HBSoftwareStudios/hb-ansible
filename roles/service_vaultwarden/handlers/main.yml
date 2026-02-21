@@ -17,3 +17,6 @@
   environment:
     XDG_RUNTIME_DIR: "/run/user/{{ service_vaultwarden_caddy_uid }}"
   changed_when: false
+  listen:
+    - Restart vaultwarden
+    - Reload caddy for vaultwarden

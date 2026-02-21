@@ -17,3 +17,6 @@ service_caddy_https_port: 443
 
 # Shared Podman network
 service_caddy_network: caddy_network
+
+# Network aliases for the Caddy container (e.g. for internal OIDC discovery)
+service_caddy_network_aliases: []

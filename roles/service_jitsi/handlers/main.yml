@@ -17,3 +17,6 @@
   environment:
     XDG_RUNTIME_DIR: "/run/user/{{ service_jitsi_caddy_uid }}"
   changed_when: false
+  listen:
+    - Restart jitsi
+    - Reload caddy for jitsi
