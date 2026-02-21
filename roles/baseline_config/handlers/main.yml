@@ -27,3 +27,8 @@
   ansible.builtin.systemd:
     name: systemd-journald
     state: restarted
+
+- name: Restart systemd-logind
+  ansible.builtin.systemd:
+    name: systemd-logind
+    state: restarted

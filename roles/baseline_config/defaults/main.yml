@@ -44,6 +44,9 @@ baseline_config_journald_max_use: 500M
 baseline_config_journald_max_file_size: 50M
 baseline_config_journald_retention: 30day
 
+# Power management (logind)
+baseline_config_ignore_lid_switch: false
+
 # Podman
 baseline_config_podman_registries:
   - docker.io

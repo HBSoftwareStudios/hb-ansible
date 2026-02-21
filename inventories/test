@@ -2,3 +2,4 @@
 ansible-test-server-auto
 
 [test_servers:vars]
+baseline_config_ignore_lid_switch=true

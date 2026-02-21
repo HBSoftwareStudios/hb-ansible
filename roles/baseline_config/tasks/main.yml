@@ -31,6 +31,10 @@
   ansible.builtin.import_tasks: logging.yml
   tags: logging
 
+- name: Configure power management (logind)
+  ansible.builtin.import_tasks: logind.yml
+  tags: logind
+
 - name: Install and configure Podman
   ansible.builtin.import_tasks: podman.yml
   tags: podman

@@ -1,0 +1,24 @@
+---
+- name: Create logind.conf.d directory
+  ansible.builtin.file:
+    path: /etc/systemd/logind.conf.d
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+  when: baseline_config_ignore_lid_switch
+
+- name: Disable lid switch suspend
+  ansible.builtin.copy:
+    content: |
+      # {{ ansible_managed }}
+      [Login]
+      HandleLidSwitch=ignore
+      HandleLidSwitchExternalPower=ignore
+      HandleLidSwitchDocked=ignore
+    dest: /etc/systemd/logind.conf.d/lid-switch.conf
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart systemd-logind
+  when: baseline_config_ignore_lid_switch
