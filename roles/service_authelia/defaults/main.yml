@@ -12,9 +12,9 @@ service_authelia_domain: ""
 service_authelia_cookie_domain: ""
 
 # Container images — pin to specific versions
-service_authelia_image: docker.io/authelia/authelia:4.38
-service_authelia_db_image: docker.io/library/postgres:16.6-alpine
-service_authelia_redis_image: docker.io/library/redis:7.4-alpine
+service_authelia_image: "docker.io/authelia/authelia:{{ authelia_version }}"
+service_authelia_db_image: "docker.io/library/postgres:{{ postgres_version }}-alpine"
+service_authelia_redis_image: "docker.io/library/redis:{{ redis_version }}-alpine"
 
 # Database
 service_authelia_db_name: authelia

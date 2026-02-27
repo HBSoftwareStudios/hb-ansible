@@ -1,0 +1,15 @@
+---
+# Central container image versions
+# Shared images (postgres, redis, mariadb) are defined once and referenced across roles.
+
+caddy_version: "2.9"
+nextcloud_version: "32.0.6"
+vaultwarden_version: "1.32"
+paperless_version: "2.12"
+authelia_version: "4.38"
+jitsi_version: "stable-9646"
+jitsi_openid_version: "1.2.0"
+wordpress_version: "6.7"
+postgres_version: "16.6"
+redis_version: "7.4"
+mariadb_version: "11.6"

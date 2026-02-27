@@ -9,10 +9,10 @@ service_jitsi_base_dir: /opt/jitsi
 service_jitsi_domain: ""
 
 # Container images — pin to specific versions
-service_jitsi_web_image: docker.io/jitsi/web:stable-9646
-service_jitsi_prosody_image: docker.io/jitsi/prosody:stable-9646
-service_jitsi_jicofo_image: docker.io/jitsi/jicofo:stable-9646
-service_jitsi_jvb_image: docker.io/jitsi/jvb:stable-9646
+service_jitsi_web_image: "docker.io/jitsi/web:{{ jitsi_version }}"
+service_jitsi_prosody_image: "docker.io/jitsi/prosody:{{ jitsi_version }}"
+service_jitsi_jicofo_image: "docker.io/jitsi/jicofo:{{ jitsi_version }}"
+service_jitsi_jvb_image: "docker.io/jitsi/jvb:{{ jitsi_version }}"
 
 # JVB media port (UDP, must be opened in firewall)
 service_jitsi_jvb_port: 10000
@@ -40,7 +40,7 @@ service_jitsi_timezone: Europe/Berlin
 
 # OIDC authentication via Authelia (uses jitsi-openid adapter)
 service_jitsi_oidc_enabled: true
-service_jitsi_openid_image: docker.io/marlocation/jitsi-openid:1.2.0
+service_jitsi_openid_image: "docker.io/marlocation/jitsi-openid:{{ jitsi_openid_version }}"
 service_jitsi_oidc_issuer_url: "https://{{ service_authelia_domain }}"
 service_jitsi_oidc_client_id: jitsi
 service_jitsi_oidc_client_secret: "{{ vault_authelia_oidc_jitsi_client_secret }}"

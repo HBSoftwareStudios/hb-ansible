@@ -9,8 +9,8 @@ service_vaultwarden_base_dir: /opt/vaultwarden
 service_vaultwarden_domain: ""
 
 # Container images — pin to specific versions
-service_vaultwarden_image: docker.io/vaultwarden/server:1.32-alpine
-service_vaultwarden_db_image: docker.io/library/postgres:16.6-alpine
+service_vaultwarden_image: "docker.io/vaultwarden/server:{{ vaultwarden_version }}-alpine"
+service_vaultwarden_db_image: "docker.io/library/postgres:{{ postgres_version }}-alpine"
 
 # Database
 service_vaultwarden_db_name: vaultwarden

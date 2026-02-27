@@ -6,7 +6,7 @@ service_caddy_user: "{{ baseline_config_admin_users[0].name }}"
 service_caddy_base_dir: /opt/caddy
 
 # Container image — pin to specific minor version
-service_caddy_image: docker.io/library/caddy:2.9-alpine
+service_caddy_image: "docker.io/library/caddy:{{ caddy_version }}-alpine"
 
 # ACME email for Let's Encrypt — set in host/group vars
 service_caddy_email: ""

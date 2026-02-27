@@ -9,8 +9,8 @@ service_wordpress_base_dir: /opt/wordpress
 service_wordpress_domain: ""
 
 # Container images — pin to specific versions
-service_wordpress_image: docker.io/library/wordpress:6.7-apache
-service_wordpress_db_image: docker.io/library/mariadb:11.6
+service_wordpress_image: "docker.io/library/wordpress:{{ wordpress_version }}-apache"
+service_wordpress_db_image: "docker.io/library/mariadb:{{ mariadb_version }}"
 
 # Database
 service_wordpress_db_name: wordpress
