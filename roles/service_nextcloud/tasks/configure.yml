@@ -229,6 +229,56 @@
     and 'twofactor_totp' not in (service_nextcloud_app_list_check.stdout | from_json).enabled
   changed_when: true
 
+- name: Check if two-factor authentication is enforced
+  ansible.builtin.command:
+    cmd: >-
+      podman exec -u www-data nextcloud php occ
+      config:system:get twofactor_enforced
+  become: true
+  become_user: "{{ service_nextcloud_user }}"
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ service_nextcloud_uid }}"
+  register: service_nextcloud_twofactor_enforced_check
+  changed_when: false
+  failed_when: false
+
+- name: Enforce two-factor authentication
+  ansible.builtin.command:
+    cmd: >-
+      podman exec -u www-data nextcloud php occ
+      config:system:set twofactor_enforced --value=true --type=boolean
+  become: true
+  become_user: "{{ service_nextcloud_user }}"
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ service_nextcloud_uid }}"
+  when: service_nextcloud_twofactor_enforced_check.stdout | default('') | trim != 'true'
+  changed_when: true
+
+- name: Check default language config
+  ansible.builtin.command:
+    cmd: >-
+      podman exec -u www-data nextcloud php occ
+      config:system:get default_language
+  become: true
+  become_user: "{{ service_nextcloud_user }}"
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ service_nextcloud_uid }}"
+  register: service_nextcloud_default_language_check
+  changed_when: false
+  failed_when: false
+
+- name: Set default language to English
+  ansible.builtin.command:
+    cmd: >-
+      podman exec -u www-data nextcloud php occ
+      config:system:set default_language --value=en
+  become: true
+  become_user: "{{ service_nextcloud_user }}"
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ service_nextcloud_uid }}"
+  when: service_nextcloud_default_language_check.stdout | default('') | trim != 'en'
+  changed_when: true
+
 - name: Check OIDC allow_multiple_user_backends setting
   ansible.builtin.command:
     cmd: >-
