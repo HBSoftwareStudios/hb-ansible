@@ -233,7 +233,7 @@
   ansible.builtin.command:
     cmd: >-
       podman exec -u www-data nextcloud php occ
-      config:system:get twofactor_enforced
+      config:app:get core twofactor_enforced
   become: true
   become_user: "{{ service_nextcloud_user }}"
   environment:
@@ -246,12 +246,12 @@
   ansible.builtin.command:
     cmd: >-
       podman exec -u www-data nextcloud php occ
-      config:system:set twofactor_enforced --value=true --type=boolean
+      twofactorauth:enforce --on
   become: true
   become_user: "{{ service_nextcloud_user }}"
   environment:
     XDG_RUNTIME_DIR: "/run/user/{{ service_nextcloud_uid }}"
-  when: service_nextcloud_twofactor_enforced_check.stdout | default('') | trim != 'true'
+  when: service_nextcloud_twofactor_enforced_check.stdout | default('') | trim != '1'
   changed_when: true
 
 - name: Check default language config
