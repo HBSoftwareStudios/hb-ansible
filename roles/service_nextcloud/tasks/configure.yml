@@ -87,9 +87,17 @@
 
 - name: Set memcache.local to APCu
   ansible.builtin.command:
-    cmd: >-
-      podman exec -u www-data nextcloud php occ
-      config:system:set memcache.local --value=\OC\Memcache\APCu
+    argv:
+      - podman
+      - exec
+      - -u
+      - www-data
+      - nextcloud
+      - php
+      - occ
+      - config:system:set
+      - memcache.local
+      - --value=\OC\Memcache\APCu
   become: true
   become_user: "{{ service_nextcloud_user }}"
   environment:
@@ -112,9 +120,17 @@
 
 - name: Set memcache.distributed to Redis
   ansible.builtin.command:
-    cmd: >-
-      podman exec -u www-data nextcloud php occ
-      config:system:set memcache.distributed --value=\OC\Memcache\Redis
+    argv:
+      - podman
+      - exec
+      - -u
+      - www-data
+      - nextcloud
+      - php
+      - occ
+      - config:system:set
+      - memcache.distributed
+      - --value=\OC\Memcache\Redis
   become: true
   become_user: "{{ service_nextcloud_user }}"
   environment:
@@ -137,9 +153,17 @@
 
 - name: Set memcache.locking to Redis
   ansible.builtin.command:
-    cmd: >-
-      podman exec -u www-data nextcloud php occ
-      config:system:set memcache.locking --value=\OC\Memcache\Redis
+    argv:
+      - podman
+      - exec
+      - -u
+      - www-data
+      - nextcloud
+      - php
+      - occ
+      - config:system:set
+      - memcache.locking
+      - --value=\OC\Memcache\Redis
   become: true
   become_user: "{{ service_nextcloud_user }}"
   environment:

@@ -9,7 +9,7 @@ service_nextcloud_base_dir: /opt/nextcloud
 service_nextcloud_domain: ""
 
 # Container images — pin to specific versions
-service_nextcloud_image: docker.io/library/nextcloud:31.0.14-apache
+service_nextcloud_image: docker.io/library/nextcloud:32.0.6-apache
 service_nextcloud_db_image: docker.io/library/postgres:16.6-alpine
 service_nextcloud_redis_image: docker.io/library/redis:7.4-alpine
 
