@@ -34,6 +34,7 @@
   loop:
     - "{{ service_nextcloud_base_dir }}/data"
     - "{{ service_nextcloud_base_dir }}/db"
+    - "{{ service_nextcloud_base_dir }}/redis"
 
 - name: Create Nextcloud data directories
   ansible.builtin.file:

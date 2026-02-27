@@ -9,8 +9,9 @@ service_nextcloud_base_dir: /opt/nextcloud
 service_nextcloud_domain: ""
 
 # Container images — pin to specific versions
-service_nextcloud_image: docker.io/library/nextcloud:30-apache
+service_nextcloud_image: docker.io/library/nextcloud:31.0.14-apache
 service_nextcloud_db_image: docker.io/library/postgres:16.6-alpine
+service_nextcloud_redis_image: docker.io/library/redis:7.4-alpine
 
 # Database
 service_nextcloud_db_name: nextcloud
@@ -35,6 +36,9 @@ service_nextcloud_trusted_proxies: "10.89.0.0/16"
 
 # Maintenance window start hour (UTC), 1 = 02:00 CET
 service_nextcloud_maintenance_window_start: 1
+
+# Default phone region (ISO 3166-1 alpha-2)
+service_nextcloud_default_phone_region: DE
 
 # Upload limit
 service_nextcloud_max_upload_size: 10G

@@ -3,6 +3,30 @@
   ansible.builtin.import_tasks: deploy.yml
   tags: nextcloud
 
+- name: Flush handlers to restart stack before configuration
+  ansible.builtin.meta: flush_handlers
+  tags: nextcloud
+
+- name: Wait for Nextcloud readiness after potential upgrade
+  ansible.builtin.command:
+    cmd: podman exec -u www-data nextcloud php occ status --output=json
+  become: true
+  become_user: "{{ service_nextcloud_user }}"
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ service_nextcloud_uid }}"
+  register: service_nextcloud_status
+  until: >-
+    (service_nextcloud_status.stdout | from_json).installed
+    and not (service_nextcloud_status.stdout | from_json).maintenance
+  retries: 30
+  delay: 10
+  changed_when: false
+  tags: nextcloud
+
+- name: Configure Nextcloud cron and caching
+  ansible.builtin.import_tasks: configure.yml
+  tags: nextcloud
+
 - name: Configure Nextcloud OIDC
   ansible.builtin.import_tasks: oidc.yml
   tags: nextcloud

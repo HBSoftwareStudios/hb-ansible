@@ -10,6 +10,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_healthy
     networks:
       - {{ service_nextcloud_network }}
       - nextcloud_internal
@@ -26,6 +28,35 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - nextcloud_internal
+
+  redis:
+    image: {{ service_nextcloud_redis_image }}
+    container_name: nextcloud-redis
+    restart: unless-stopped
+    volumes:
+      - {{ service_nextcloud_base_dir }}/redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - nextcloud_internal
+
+  cron:
+    image: {{ service_nextcloud_image }}
+    container_name: nextcloud-cron
+    restart: unless-stopped
+    entrypoint: /cron.sh
+    volumes:
+      - {{ service_nextcloud_base_dir }}/data:/var/www/html
+    depends_on:
+      nextcloud:
+        condition: service_started
+      redis:
+        condition: service_healthy
     networks:
       - nextcloud_internal
 
