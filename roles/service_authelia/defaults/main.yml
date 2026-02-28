@@ -46,6 +46,30 @@ service_authelia_paperless_domain: "{{ service_paperless_domain }}"
 service_authelia_jitsi_domain: "{{ service_jitsi_domain }}"
 service_authelia_wordpress_domain: "{{ service_wordpress_domain }}"
 
+# Session timeouts
+service_authelia_session_expiration: "2h"
+service_authelia_session_inactivity: "15m"
+service_authelia_session_remember_me: "24h"
+
+# Brute-force regulation
+service_authelia_regulation_max_retries: 3
+service_authelia_regulation_find_time: "2m"
+service_authelia_regulation_ban_time: "5m"
+
+# Password policy (zxcvbn mode, score 0-4)
+service_authelia_password_policy_min_score: 3
+
+# OIDC token lifetimes
+service_authelia_oidc_access_token_lifespan: "30m"
+service_authelia_oidc_id_token_lifespan: "30m"
+service_authelia_oidc_refresh_token_lifespan: "90m"
+
+# Logging
+service_authelia_log_format: "json"
+
+# Redis authentication
+service_authelia_redis_password: "{{ vault_authelia_redis_password }}"
+
 # Authelia users — define in group_vars, passwords in vault
 service_authelia_users: {}
 

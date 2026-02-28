@@ -3,17 +3,41 @@
 server:
   address: tcp://0.0.0.0:9091
 
+ntp:
+  address: udp://time.cloudflare.com:123
+  version: 4
+  max_desync: 3s
+  disable_startup_check: false
+  disable_failure: false
+
 log:
   level: info
+  format: {{ service_authelia_log_format }}
 
 totp:
   issuer: {{ service_authelia_domain }}
+  algorithm: sha1
+  digits: 6
+  period: 30
+  skew: 1
+  secret_size: 32
+
+webauthn:
+  disable: true
 
 authentication_backend:
   file:
     path: /config/users_database.yml
 
+password_policy:
+  zxcvbn:
+    enabled: true
+    min_score: {{ service_authelia_password_policy_min_score }}
+
 session:
+  expiration: {{ service_authelia_session_expiration }}
+  inactivity: {{ service_authelia_session_inactivity }}
+  remember_me: {{ service_authelia_session_remember_me }}
   cookies:
     - domain: {{ service_authelia_cookie_domain }}
       authelia_url: https://{{ service_authelia_domain }}
@@ -21,6 +45,12 @@ session:
   redis:
     host: authelia-redis
     port: 6379
+    password: {{ service_authelia_redis_password }}
+
+regulation:
+  max_retries: {{ service_authelia_regulation_max_retries }}
+  find_time: {{ service_authelia_regulation_find_time }}
+  ban_time: {{ service_authelia_regulation_ban_time }}
 
 storage:
   encryption_key: {{ service_authelia_storage_encryption_key }}
@@ -48,6 +78,13 @@ identity_validation:
 
 identity_providers:
   oidc:
+    enforce_pkce: public_clients_only
+    enable_pkce_plain_challenge: false
+    lifespans:
+      access_token: {{ service_authelia_oidc_access_token_lifespan }}
+      id_token: {{ service_authelia_oidc_id_token_lifespan }}
+      refresh_token: {{ service_authelia_oidc_refresh_token_lifespan }}
+      authorize_code: 1m
     hmac_secret: {{ service_authelia_oidc_hmac_secret }}
     jwks:
       - key: |
@@ -80,8 +117,7 @@ identity_providers:
           - openid
           - profile
           - email
-        token_endpoint_auth_method: client_secret_post
-        pkce_challenge_method: S256
+        token_endpoint_auth_method: client_secret_basic
 
       - client_id: jitsi
         client_name: Jitsi Meet

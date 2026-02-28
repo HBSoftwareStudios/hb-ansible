@@ -34,10 +34,11 @@ services:
     image: {{ service_authelia_redis_image }}
     container_name: authelia-redis
     restart: unless-stopped
+    command: redis-server --requirepass {{ service_authelia_redis_password }}
     volumes:
       - {{ service_authelia_base_dir }}/redis:/data
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ["CMD", "redis-cli", "-a", "{{ service_authelia_redis_password }}", "ping"]
       interval: 10s
       timeout: 5s
       retries: 5
