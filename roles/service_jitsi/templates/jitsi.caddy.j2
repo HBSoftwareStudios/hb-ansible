@@ -16,14 +16,14 @@
 
 {% if service_jitsi_oidc_enabled %}
     # OIDC authentication proxy
-    handle_path /oidc/* {
+    handle /oidc/* {
         uri strip_prefix /oidc
         reverse_proxy jitsi-openid:3000
     }
 {% endif %}
 
     # BOSH endpoint (HTTP long-polling)
-    handle_path /http-bind {
+    handle /http-bind {
         reverse_proxy jitsi-web:80 {
             header_up X-Forwarded-For {remote_host}
             header_up X-Real-IP {remote_host}
@@ -36,7 +36,7 @@
     }
 
     # XMPP WebSocket endpoint
-    handle_path /xmpp-websocket {
+    handle /xmpp-websocket {
         reverse_proxy jitsi-web:80 {
             header_up Host {host}
             header_up X-Real-IP {remote_host}
@@ -50,7 +50,7 @@
     }
 
     # Colibri WebSocket (JVB video bridge)
-    handle_path /colibri-ws/* {
+    handle /colibri-ws/* {
         reverse_proxy jitsi-web:80 {
             header_up Host {host}
             header_up X-Real-IP {remote_host}
@@ -64,7 +64,7 @@
     }
 
     # Main catch-all proxy
-    handle_path {
+    handle {
         reverse_proxy jitsi-web:80 {
             header_up Host {host}
             header_up X-Real-IP {remote_host}
