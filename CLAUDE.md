@@ -50,3 +50,4 @@ Standard Ansible directory layout:
 - **Warnings**: Ansible warnings must be investigated and resolved immediately. The playbook should run without any warnings.
 - **Linting**: `ansible-lint` must pass cleanly (0 errors, 0 warnings).
 - **Commits**: Never create commits autonomously. Commits are done exclusively via the `/ship` skill.
+- **Server access**: Never SSH into the server directly. Ansible playbook commands may be executed locally. For manual server commands (podman, mariadb, file inspection, etc.), provide the commands to the user to run.
