@@ -1,7 +1,7 @@
 # {{ ansible_managed }}
 {{ service_jitsi_domain }} {
 {% if service_jitsi_oidc_enabled %}
-    handle /oidc/* {
+    handle_path /oidc/* {
         reverse_proxy jitsi-openid:3000
     }
 {% endif %}

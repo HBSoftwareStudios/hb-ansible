@@ -20,7 +20,9 @@ services:
       - {{ service_jitsi_base_dir }}/prosody/config:/config
       - {{ service_jitsi_base_dir }}/prosody/plugins:/prosody-plugins-custom
     networks:
-      - jitsi_internal
+      jitsi_internal:
+        aliases:
+          - xmpp.{{ service_jitsi_xmpp_domain }}
 
   jicofo:
     image: {{ service_jitsi_jicofo_image }}
@@ -56,7 +58,9 @@ services:
     environment:
       JITSI_SECRET: {{ service_jitsi_jwt_secret }}
       JITSI_URL: https://{{ service_jitsi_domain }}
+      JITSI_SUB: {{ service_jitsi_oidc_client_id }}
       ISSUER_URL: {{ service_jitsi_oidc_issuer_url }}
+      BASE_URL: https://{{ service_jitsi_domain }}/oidc
       CLIENT_ID: {{ service_jitsi_oidc_client_id }}
       CLIENT_SECRET: {{ service_jitsi_oidc_client_secret }}
     networks:
