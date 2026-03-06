@@ -1,13 +1,81 @@
 # {{ ansible_managed }}
+
 {{ service_jitsi_domain }} {
+    # Security headers (mirroring nginx hardening)
+    header {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains"
+        X-Frame-Options "SAMEORIGIN"
+        X-Content-Type-Options "nosniff"
+        X-XSS-Protection "1; mode=block"
+        Referrer-Policy "strict-origin-when-cross-origin"
+        -Server
+    }
+
+    # Compression
+    encode gzip
+
 {% if service_jitsi_oidc_enabled %}
-    handle_path /oidc/* {
+    # OIDC authentication proxy
+    handle /oidc/* {
+        uri strip_prefix /oidc
         reverse_proxy jitsi-openid:3000
     }
 {% endif %}
-    reverse_proxy jitsi-web:80 {
-        transport http {
-            keepalive 30s
+
+    # BOSH endpoint (HTTP long-polling)
+    handle /http-bind {
+        reverse_proxy jitsi-web:80 {
+            header_up X-Forwarded-For {remote_host}
+            header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+            transport http {
+                keepalive 120s
+                read_buffer 0
+            }
+        }
+    }
+
+    # XMPP WebSocket endpoint
+    handle /xmpp-websocket {
+        reverse_proxy jitsi-web:80 {
+            header_up Host {host}
+            header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-For {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+            transport http {
+                keepalive 86400s
+                read_buffer 0
+            }
+        }
+    }
+
+    # Colibri WebSocket (JVB video bridge)
+    handle /colibri-ws/* {
+        reverse_proxy jitsi-web:80 {
+            header_up Host {host}
+            header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-For {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+            transport http {
+                keepalive 86400s
+                read_buffer 0
+            }
+        }
+    }
+
+    # Main catch-all proxy
+    handle {
+        reverse_proxy jitsi-web:80 {
+            header_up Host {host}
+            header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-For {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+            header_up X-Forwarded-Host {host}
+            header_up X-Forwarded-Port {server_port}
+            transport http {
+                keepalive 30s
+                read_buffer 0
+            }
         }
     }
 }
