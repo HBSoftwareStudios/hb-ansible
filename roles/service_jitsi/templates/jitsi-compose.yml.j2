@@ -56,11 +56,12 @@ services:
     container_name: jitsi-openid
     restart: unless-stopped
     environment:
+      RUST_LOG: debug
       JITSI_SECRET: {{ service_jitsi_jwt_secret }}
       JITSI_URL: https://{{ service_jitsi_domain }}
       JITSI_SUB: {{ service_jitsi_oidc_client_id }}
       ISSUER_URL: {{ service_jitsi_oidc_issuer_url }}
-      BASE_URL: https://{{ service_jitsi_domain }}/oidc
+      BASE_URL: https://{{ service_jitsi_oidc_domain }}/
       CLIENT_ID: {{ service_jitsi_oidc_client_id }}
       CLIENT_SECRET: {{ service_jitsi_oidc_client_secret }}
     networks:

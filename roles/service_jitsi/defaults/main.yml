@@ -8,6 +8,9 @@ service_jitsi_base_dir: /opt/jitsi
 # Domain — REQUIRED, set in host/group vars
 service_jitsi_domain: ""
 
+# OIDC subdomain — REQUIRED when OIDC is enabled, set in host/group vars
+service_jitsi_oidc_domain: ""
+
 # Container images — pin to specific versions
 service_jitsi_web_image: "docker.io/jitsi/web:{{ jitsi_version }}"
 service_jitsi_prosody_image: "docker.io/jitsi/prosody:{{ jitsi_version }}"

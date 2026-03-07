@@ -14,14 +14,6 @@
     # Compression
     encode gzip
 
-{% if service_jitsi_oidc_enabled %}
-    # OIDC authentication proxy
-    handle /oidc/* {
-        uri strip_prefix /oidc
-        reverse_proxy jitsi-openid:3000
-    }
-{% endif %}
-
     # BOSH endpoint (HTTP long-polling)
     handle /http-bind {
         reverse_proxy jitsi-web:80 {

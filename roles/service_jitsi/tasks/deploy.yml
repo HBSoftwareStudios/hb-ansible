@@ -78,6 +78,16 @@
     mode: "0644"
   notify: Reload caddy for jitsi
 
+- name: Template jitsi-openid Caddy site config
+  ansible.builtin.template:
+    src: jitsi-openid.caddy.j2
+    dest: "{{ service_jitsi_caddy_base_dir }}/sites/jitsi-openid.caddy"
+    owner: "{{ service_jitsi_user }}"
+    group: "{{ service_jitsi_user }}"
+    mode: "0644"
+  when: service_jitsi_oidc_enabled
+  notify: Reload caddy for jitsi
+
 - name: Check if Jitsi web container is running
   ansible.builtin.command:
     cmd: podman ps --filter name=jitsi-web --format {{ '{{.Names}}' }}

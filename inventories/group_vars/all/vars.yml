@@ -20,6 +20,7 @@ service_caddy_email: "alexander.baer02+letsencrypt@gmail.com"
 # Caddy — network aliases for internal service discovery
 service_caddy_network_aliases:
   - "auth.nexus4-2.de"
+  - "auth-meet.nexus4-2.de"
 
 # Authelia
 service_authelia_domain: "auth.nexus4-2.de"
@@ -30,6 +31,7 @@ service_nextcloud_domain: "nextcloud.nexus4-2.de"
 service_vaultwarden_domain: "vault.nexus4-2.de"
 service_paperless_domain: "paperless.nexus4-2.de"
 service_jitsi_domain: "meet.nexus4-2.de"
+service_jitsi_oidc_domain: "auth-meet.nexus4-2.de"
 service_wordpress_domain: "wp.nexus4-2.de"
 
 # Authelia users

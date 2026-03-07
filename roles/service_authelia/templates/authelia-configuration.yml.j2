@@ -126,12 +126,12 @@ identity_providers:
         authorization_policy: two_factor
         consent_mode: implicit
         redirect_uris:
-          - https://{{ service_authelia_jitsi_domain }}/oidc/callback
+          - https://{{ service_authelia_jitsi_domain }}/callback
         scopes:
           - openid
           - profile
           - email
-        token_endpoint_auth_method: client_secret_post
+        token_endpoint_auth_method: client_secret_basic
 
       - client_id: wordpress
         client_name: WordPress
