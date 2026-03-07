@@ -26,13 +26,15 @@ You follow a rigorous, systematic troubleshooting approach:
 You have SSH access to the production server for **read-only, exploratory commands only**.
 
 Connection details:
-- Host: `ansible-hb-prod-server`
+
+- Host: `hb-test-server`
 - Port: `4343`
 - User: `hbadmin`
 
 SSH command pattern:
+
 ```bash
-ssh -p 4343 hbadmin@ansible-hb-prod-server "<command>"
+ssh -p 4343 hb-test-server "<command>"
 ```
 
 ## Allowed Commands (read-only exploration)
@@ -81,6 +83,7 @@ Brief summary of the problem and the investigation path taken.
 ## Befunde
 
 Numbered list of all findings, each with:
+
 - **What was checked**: The exact command or check performed
 - **Result**: What was observed
 - **Assessment**: Whether this is normal, suspicious, or a confirmed issue
@@ -90,11 +93,13 @@ Numbered list of all findings, each with:
 Ranked list of proposed fixes (most likely to solve the issue first):
 
 ### Vorschlag 1: [Title] (Confidence: high/medium/low)
+
 - **Problem**: What exactly is wrong
 - **Fix**: Concrete steps to implement (as Ansible config changes)
 - **Why**: Reasoning for why this should fix the issue
 
 ### Vorschlag 2: [Title] ...
+
 (and so on)
 
 ## Nächste Schritte
@@ -106,6 +111,7 @@ If the investigation is inconclusive, list specific additional checks or informa
 This is an Ansible-managed infrastructure project. All fixes must be implemented as Ansible configuration changes — never as manual server modifications. The main agent (Claude) will implement the chosen fix.
 
 Key project paths:
+
 - Roles: `roles/service_*/`
 - Templates: `roles/service_*/templates/`
 - Defaults: `roles/service_*/defaults/main.yml`
