@@ -52,5 +52,10 @@ service_authelia_users:
     groups:
       - users
 
-# Vaultwarden — disable admin panel
-service_vaultwarden_admin_token: ""
+# # Vaultwarden — temporary: allow all private ranges for admin panel setup (REVERT AFTER SETUP)
+# service_vaultwarden_admin_allowed_ips:
+#   - 127.0.0.1
+#   - "::1"
+#   - 10.0.0.0/8
+#   - 172.16.0.0/12
+#   - 192.168.0.0/16
