@@ -26,6 +26,14 @@ service_vaultwarden_admin_allowed_ips:
   - 127.0.0.1
   - "::1"
 
+# SMTP configuration
+service_vaultwarden_smtp_host: ""
+service_vaultwarden_smtp_port: 587
+service_vaultwarden_smtp_security: "starttls"
+service_vaultwarden_smtp_from: ""
+service_vaultwarden_smtp_username: ""
+service_vaultwarden_smtp_password: ""
+
 # Podman network (shared with Caddy)
 service_vaultwarden_network: "{{ service_caddy_network }}"
 

@@ -52,6 +52,12 @@ service_authelia_users:
     groups:
       - users
 
+# Vaultwarden SMTP
+service_vaultwarden_smtp_host: "mail.hb-studios.de"
+service_vaultwarden_smtp_from: "vaultwarden@hb-studios.de"
+service_vaultwarden_smtp_username: "vaultwarden@hb-studios.de"
+service_vaultwarden_smtp_password: "{{ vault_vaultwarden_smtp_password }}"
+
 # # Vaultwarden — temporary: allow all private ranges for admin panel setup (REVERT AFTER SETUP)
 # service_vaultwarden_admin_allowed_ips:
 #   - 127.0.0.1
