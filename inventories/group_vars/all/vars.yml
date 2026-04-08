@@ -18,9 +18,9 @@ service_nextcloud_user: hbadmin
 service_caddy_email: "alexander.baer02+letsencrypt@gmail.com"
 
 # Caddy — network aliases for internal service discovery
-service_caddy_network_aliases:
-  - "auth.nexus4-2.de"
-  - "auth-meet.nexus4-2.de"
+# Removed: auth/auth-meet aliases no longer needed since TLS is terminated
+# on Server 1 (Caddy with Let's Encrypt). OIDC traffic routes via public IP.
+service_caddy_network_aliases: []
 
 # Authelia
 service_authelia_domain: "auth.nexus4-2.de"

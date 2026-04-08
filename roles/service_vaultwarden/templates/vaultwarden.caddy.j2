@@ -1,5 +1,6 @@
 # {{ ansible_managed }}
 {{ service_vaultwarden_domain }} {
+    tls internal
     handle /admin* {
         @blocked {
             not remote_ip {{ service_vaultwarden_admin_allowed_ips | join(' ') }}

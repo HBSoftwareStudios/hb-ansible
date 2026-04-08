@@ -1,6 +1,7 @@
 # {{ ansible_managed }}
 
 {{ service_jitsi_domain }} {
+    tls internal
     # Security headers (mirroring nginx hardening)
     header {
         Strict-Transport-Security "max-age=31536000; includeSubDomains"
